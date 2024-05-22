@@ -1,26 +1,30 @@
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { LoggerOptions } from 'typeorm';
 
-async function typeOrmModuleFactory(
-  config: ConfigService,
-): Promise<TypeOrmModuleOptions> {
-  return {
-    type: 'postgres',
-    host: config.getOrThrow<string>('DATABASE.HOST'),
-    port: config.getOrThrow<number>('DATABASE.PORT'),
-    username: config.getOrThrow<string>('DATABASE.USERNAME'),
-    password: config.getOrThrow<string>('DATABASE.PASSWORD'),
-    database: config.getOrThrow<string>('DATABASE.NAME'),
-    ssl: config.get<boolean>('DATABASE.SSL'),
+@Module({
+  imports: [ConfigModule],
+})
+export default class TypeOrmModuleFactory implements TypeOrmOptionsFactory {
+  constructor(private readonly config: ConfigService) {}
 
-    entities: ['**/*.entity{.ts,.js}'],
-    synchronize: config.get<boolean>('DATABASE.SYNC'),
+  createTypeOrmOptions(): TypeOrmModuleOptions {
+    return {
+      type: 'postgres',
+      host: this.config.getOrThrow<string>('DATABASE.HOST'),
+      port: this.config.getOrThrow<number>('DATABASE.PORT'),
+      username: this.config.getOrThrow<string>('DATABASE.USERNAME'),
+      password: this.config.getOrThrow<string>('DATABASE.PASSWORD'),
+      database: this.config.getOrThrow<string>('DATABASE.NAME'),
+      ssl: this.config.get<boolean>('DATABASE.SSL'),
 
-    logging: (config
-      .get<string>('DATABASE.LOG_LEVEL')
-      .split(',') as LoggerOptions) ?? ['error'],
-  };
+      entities: ['**/*.entity{.ts,.js}'],
+      synchronize: this.config.get<boolean>('DATABASE.SYNC'),
+
+      logging: (this.config
+        .get<string>('DATABASE.LOG_LEVEL')
+        ?.split(',') as LoggerOptions) ?? ['error'],
+    };
+  }
 }
-
-export default typeOrmModuleFactory;

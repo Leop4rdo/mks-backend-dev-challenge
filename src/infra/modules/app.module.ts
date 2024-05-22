@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import typeOrmModuleFactory from '../config/typeorm-module.factory';
+import TypeOrmModuleFactory from '../config/typeorm-module.factory';
 
 @Module({
   imports: [
@@ -9,9 +9,7 @@ import typeOrmModuleFactory from '../config/typeorm-module.factory';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigModule],
-      useFactory: typeOrmModuleFactory,
+      useClass: TypeOrmModuleFactory,
     }),
   ],
   controllers: [],
