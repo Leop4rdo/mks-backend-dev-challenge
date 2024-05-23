@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { LoggerOptions } from 'typeorm';
+import { UserTypeOrmModel } from '../typeorm/models/user-typeorm.model';
 
 @Module({
   imports: [ConfigModule],
@@ -19,7 +20,7 @@ export default class TypeOrmModuleFactory implements TypeOrmOptionsFactory {
       database: this.config.getOrThrow<string>('DATABASE.NAME'),
       ssl: this.config.get<boolean>('DATABASE.SSL'),
 
-      entities: ['**/*.entity{.ts,.js}'],
+      entities: [UserTypeOrmModel],
       synchronize: this.config.get<boolean>('DATABASE.SYNC'),
 
       logging: (this.config

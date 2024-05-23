@@ -5,6 +5,8 @@ import { CreateUserUseCase } from 'src/application/use-cases/user';
 import TypeOrmModuleFactory from '../config/typeorm-module.factory';
 import { UserTypeOrmRepository } from '../typeorm/repositories/user-typeorm.repository';
 import { UserRepository } from 'src/application/repositories';
+import { HashService } from 'src/application/services';
+import { BcryptHashService } from '../services';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { UserRepository } from 'src/application/repositories';
   providers: [
     CreateUserUseCase,
     { provide: UserRepository, useClass: UserTypeOrmRepository },
+    { provide: HashService, useClass: BcryptHashService },
   ],
 })
 export class AppModule {}
