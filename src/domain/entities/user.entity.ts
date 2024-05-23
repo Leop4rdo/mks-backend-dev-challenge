@@ -1,4 +1,4 @@
-import UUID from 'uuid';
+import { UUID } from 'crypto';
 
 export class User {
   id: UUID;

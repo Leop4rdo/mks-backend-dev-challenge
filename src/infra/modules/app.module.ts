@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CreateUserUseCase } from 'src/application/use-cases/user';
 import TypeOrmModuleFactory from '../config/typeorm-module.factory';
+import { UserTypeOrmRepository } from '../typeorm/repositories/user-typeorm.repository';
+import { UserRepository } from 'src/application/repositories';
 
 @Module({
   imports: [
@@ -13,6 +16,9 @@ import TypeOrmModuleFactory from '../config/typeorm-module.factory';
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    CreateUserUseCase,
+    { provide: UserRepository, useClass: UserTypeOrmRepository },
+  ],
 })
 export class AppModule {}

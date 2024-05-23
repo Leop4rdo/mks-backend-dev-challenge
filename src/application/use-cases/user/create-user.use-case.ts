@@ -18,11 +18,11 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(input: CreateUserUseCaseInputDTO): Promise<User> {
-    await this.validateDuplicateEmail(input.email);
+    await this.validateDuplicateEmail(input.email.toLowerCase());
 
     const user = new User();
     user.name = input.name;
-    user.email = input.email;
+    user.email = input.email.toLowerCase();
     user.password = await this.hashService.hash(input.password);
 
     return await this.repository.save(user);

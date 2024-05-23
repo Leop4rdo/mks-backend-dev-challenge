@@ -1,3 +1,3 @@
-export interface HashService {
-  hash(value: string): Promise<string>;
+export abstract class HashService {
+  abstract hash(value: string): Promise<string>;
 }
