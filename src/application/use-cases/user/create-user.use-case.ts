@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import UserRepository from 'src/application/repositories/user.repository';
+import { DuplicateResourceError } from 'src/application/errors';
+import { UserRepository } from 'src/application/repositories';
+import { HashService } from 'src/application/services';
 import { User } from 'src/domain/entities';
 
 export type CreateUserUseCaseInputDTO = {
@@ -10,12 +12,26 @@ export type CreateUserUseCaseInputDTO = {
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly hashService: HashService,
+  ) {}
 
   async execute(input: CreateUserUseCaseInputDTO): Promise<User> {
-    const existentWithSameEmail = this.repository.findByEmail(input.email);
-    if (existentWithSameEmail) throw new DuplicateResourceError(); // todo work in this exception
+    await this.validateDuplicateEmail(input.email);
 
-    return new Promise(null);
+    const user = new User();
+    user.name = input.name;
+    user.email = input.email;
+    user.password = await this.hashService.hash(input.password);
+
+    return await this.repository.save(user);
+  }
+
+  async validateDuplicateEmail(email: string) {
+    const existentWithSameEmail = await this.repository.findByEmail(email);
+
+    if (existentWithSameEmail)
+      throw new DuplicateResourceError(User.constructor.name, { email });
   }
 }

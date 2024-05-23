@@ -1,5 +1,6 @@
 import { User } from 'src/domain/entities';
 
-export default interface UserRepository {
-  findByEmail(email: string): Promise<User>;
+export interface UserRepository {
+  findByEmail(email: string): Promise<User | null>;
+  save(user: User): Promise<User>;
 }
