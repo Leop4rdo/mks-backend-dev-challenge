@@ -2,17 +2,29 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UUID } from 'crypto';
-import { AuthenticationTokenService } from 'src/application/services';
+import {
+  AccessTokenPayload,
+  AuthenticationTokenService,
+} from 'src/application/services';
 import { User } from 'src/domain/entities';
 
 @Injectable()
 export class JwtAuthenticationTokenService
   implements AuthenticationTokenService
 {
-  constructor(
-    private readonly jwt: JwtService,
-    private readonly config: ConfigService,
-  ) {}
+  private readonly SECRET: string;
+  private readonly ISSUER: string;
+  private readonly ACCESS_TOKEN_EXPIRES_IN: string;
+  private readonly REFRESH_TOKEN_EXPIRES_IN: string;
+
+  constructor(private readonly jwt: JwtService, config: ConfigService) {
+    this.SECRET = config.getOrThrow<string>('JWT.SECRET');
+    this.ISSUER = config.getOrThrow<string>('JWT.ISSUER');
+    this.ACCESS_TOKEN_EXPIRES_IN =
+      config.getOrThrow<string>('JWT.ACCESS_TOKEN.EXPIRES_IN') ?? '15m';
+    this.REFRESH_TOKEN_EXPIRES_IN =
+      config.getOrThrow<string>('JWT.REFRESH_TOKEN.EXPIRES_IN') ?? '2d';
+  }
 
   async generateAccessToken(user: User): Promise<string> {
     return await this.jwt.signAsync(
@@ -22,11 +34,10 @@ export class JwtAuthenticationTokenService
         name: user.name,
       },
       {
-        secret: this.config.getOrThrow<string>('JWT.SECRET'),
-        issuer: this.config.getOrThrow<string>('JWT.ISSUER'),
+        secret: this.SECRET,
+        issuer: this.ISSUER,
         subject: user.id,
-        expiresIn:
-          this.config.get<string>('JWT.ACCESS_TOKEN.EXPIRES_IN') ?? '15m',
+        expiresIn: this.ACCESS_TOKEN_EXPIRES_IN,
       },
     );
   }
@@ -37,12 +48,18 @@ export class JwtAuthenticationTokenService
         id: userId,
       },
       {
-        secret: this.config.getOrThrow<string>('JWT.SECRET'),
-        issuer: this.config.getOrThrow<string>('JWT.ISSUER'),
+        secret: this.SECRET,
+        issuer: this.ISSUER,
         subject: userId,
-        expiresIn:
-          this.config.get<string>('JWT.REFRESH_TOKEN.EXPIRES_IN') ?? '7d',
+        expiresIn: this.REFRESH_TOKEN_EXPIRES_IN,
       },
     );
+  }
+
+  async decodeAccessToken(accessToken: string): Promise<AccessTokenPayload> {
+    return await this.jwt.verifyAsync(accessToken, {
+      secret: this.SECRET,
+      issuer: this.ISSUER,
+    });
   }
 }
