@@ -15,10 +15,14 @@ export class AuthenticationGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractToken(request);
 
-    const decoded = this.tokenService.decodeAccessToken(token);
-    request['_authenticatedUser'] = decoded;
+    try {
+      const decoded = await this.tokenService.decodeAccessToken(token);
+      request['_authenticatedUser'] = decoded;
 
-    return true;
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 
   extractToken(request: Request): string {
