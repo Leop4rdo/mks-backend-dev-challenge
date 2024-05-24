@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ListMoviesFiltersInputDTO } from 'src/application/use-cases/movie';
 import {
   CreateUserUseCase,
   ListUsersOutputDTO,
@@ -13,7 +22,6 @@ import {
 import { AuthenticationGuard } from '../guards/authentication.guard';
 import {
   CreateUserHttpRequest,
-  ListUsersFiltersHttpRequest,
   LoginHttpRequest,
   RefreshAccessTokenHttpRequest,
 } from '../requests';
@@ -29,6 +37,7 @@ export class UserController {
   ) {}
 
   @Post()
+  @HttpCode(201)
   async createUser(
     @Body()
     request: CreateUserHttpRequest,
@@ -58,7 +67,7 @@ export class UserController {
   @UseGuards(AuthenticationGuard)
   async list(
     @Query()
-    filters: ListUsersFiltersHttpRequest,
+    filters: ListMoviesFiltersInputDTO,
   ): Promise<ListUsersOutputDTO> {
     filters.limit = filters.limit ?? 32;
     filters.page = filters.page ?? 1;

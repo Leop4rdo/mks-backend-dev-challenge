@@ -19,7 +19,13 @@ import { MovieTypeOrmModel, UserTypeOrmModel } from '../typeorm/models';
 import { UserTypeOrmRepository } from '../typeorm/repositories';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthenticationGuard } from '../http/guards/authentication.guard';
-import { CreateMovieUseCase } from 'src/application/use-cases/movie';
+import {
+  CreateMovieUseCase,
+  DeleteMovieUseCase,
+  EditMovieUseCase,
+  FindMovieByIdUseCase,
+  ListMoviesUseCase,
+} from 'src/application/use-cases/movie';
 import { MovieTypeOrmRepository } from '../typeorm/repositories/movie-typeorm.repository';
 
 @Module({
@@ -42,6 +48,10 @@ import { MovieTypeOrmRepository } from '../typeorm/repositories/movie-typeorm.re
     ListUsersUseCase,
 
     CreateMovieUseCase,
+    ListMoviesUseCase,
+    FindMovieByIdUseCase,
+    EditMovieUseCase,
+    DeleteMovieUseCase,
 
     AuthenticationGuard,
     { provide: UserRepository, useClass: UserTypeOrmRepository },

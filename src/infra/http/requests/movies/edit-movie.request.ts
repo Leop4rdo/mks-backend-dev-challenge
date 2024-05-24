@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsDate } from 'class-validator';
 
-export class CreateMovieHttpRequest {
+export class EditMovieHttpRequest {
   @IsString()
   @IsNotEmpty()
   name: string;

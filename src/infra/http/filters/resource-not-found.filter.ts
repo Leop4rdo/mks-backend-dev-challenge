@@ -1,10 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { Catch, ExceptionFilter, ArgumentsHost } from '@nestjs/common';
 import { Response } from 'express';
-import { DuplicateResourceError } from 'src/application/errors';
+import { ResourceNotFound } from 'src/application/errors/resource-not-found.error';
 
-@Catch(DuplicateResourceError)
-export class DuplicateResourceFilter implements ExceptionFilter {
-  catch(exception: DuplicateResourceError, host: ArgumentsHost) {
+@Catch(ResourceNotFound)
+export class ResourceNotFoundFilter implements ExceptionFilter {
+  catch(exception: ResourceNotFound, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();
 

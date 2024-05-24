@@ -46,9 +46,8 @@ export class UserTypeOrmRepository implements UserRepository {
   async listByFilters(
     filters: ListUsersFiltersInputDTO,
   ): Promise<ListUsersOutputDTO> {
-    console.log(filters);
     const page = filters.page <= 1 ? 1 : filters.page + -1;
-    console.log(page);
+
     const [models, total] = await this.typeOrmRepository.findAndCount({
       where: {
         email: filters.search ? ILike(`%${filters.search}%`) : undefined,
@@ -60,8 +59,7 @@ export class UserTypeOrmRepository implements UserRepository {
 
     return {
       data: models.map((model) => model.toEntity()),
-      totalItens: total,
-      totalPages: total / filters.limit,
+      total: total,
     };
   }
 }

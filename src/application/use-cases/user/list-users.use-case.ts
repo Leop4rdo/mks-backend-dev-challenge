@@ -10,8 +10,7 @@ export type ListUsersFiltersInputDTO = {
 
 export type ListUsersOutputDTO = {
   data: Array<User>;
-  totalItens: number;
-  totalPages: number;
+  total: number;
 };
 
 @Injectable()
