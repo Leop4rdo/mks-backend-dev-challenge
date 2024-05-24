@@ -14,7 +14,7 @@ import {
   HashService,
 } from 'src/application/services';
 import { BcryptHashService, JwtAuthenticationTokenService } from '../services';
-import { UserController } from '../http/controllers';
+import { MovieController, UserController } from '../http/controllers';
 import { MovieTypeOrmModel, UserTypeOrmModel } from '../typeorm/models';
 import { UserTypeOrmRepository } from '../typeorm/repositories';
 import { JwtModule } from '@nestjs/jwt';
@@ -34,7 +34,7 @@ import { MovieTypeOrmRepository } from '../typeorm/repositories/movie-typeorm.re
     TypeOrmModule.forFeature([UserTypeOrmModel, MovieTypeOrmModel]),
     JwtModule.register({}),
   ],
-  controllers: [UserController],
+  controllers: [UserController, MovieController],
   providers: [
     CreateUserUseCase,
     LoginUseCase,
