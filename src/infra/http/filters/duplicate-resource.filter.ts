@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { DuplicateResourceError } from 'src/application/errors';
 
 @Catch(DuplicateResourceError)

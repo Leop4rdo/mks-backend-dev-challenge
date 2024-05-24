@@ -28,7 +28,7 @@ export class CreateUserUseCase {
     return await this.repository.save(user);
   }
 
-  async validateDuplicateEmail(email: string) {
+  private async validateDuplicateEmail(email: string) {
     const existentWithSameEmail = await this.repository.findByEmail(email);
 
     if (existentWithSameEmail)
