@@ -32,6 +32,6 @@ export class CreateUserUseCase {
     const existentWithSameEmail = await this.repository.findByEmail(email);
 
     if (existentWithSameEmail)
-      throw new DuplicateResourceError(User.constructor.name, { email });
+      throw new DuplicateResourceError('User', { email });
   }
 }

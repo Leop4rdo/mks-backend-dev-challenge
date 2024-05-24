@@ -33,7 +33,7 @@ export class UserTypeOrmModel {
 
     model.id = entity.id;
     model.name = entity.name;
-    model.email = entity.password;
+    model.email = entity.email;
     model.password = entity.password;
     model.createdAt = entity.createdAt;
     model.updatedAt = entity.updatedAt;
