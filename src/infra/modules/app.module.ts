@@ -16,6 +16,7 @@ import { UserController } from '../http/controllers';
 import { UserTypeOrmModel } from '../typeorm/models';
 import { UserTypeOrmRepository } from '../typeorm/repositories';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthenticationGuard } from '../http/guards/authentication.guard';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { JwtModule } from '@nestjs/jwt';
   providers: [
     CreateUserUseCase,
     LoginUseCase,
+    AuthenticationGuard,
     { provide: UserRepository, useClass: UserTypeOrmRepository },
     { provide: HashService, useClass: BcryptHashService },
     {
