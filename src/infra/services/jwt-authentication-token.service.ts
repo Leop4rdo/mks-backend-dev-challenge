@@ -21,9 +21,9 @@ export class JwtAuthenticationTokenService
     this.SECRET = config.getOrThrow<string>('JWT.SECRET');
     this.ISSUER = config.getOrThrow<string>('JWT.ISSUER');
     this.ACCESS_TOKEN_EXPIRES_IN =
-      config.getOrThrow<string>('JWT.ACCESS_TOKEN.EXPIRES_IN') ?? '15m';
+      config.get<string>('JWT.ACCESS_TOKEN.EXPIRES_IN') ?? '15m';
     this.REFRESH_TOKEN_EXPIRES_IN =
-      config.getOrThrow<string>('JWT.REFRESH_TOKEN.EXPIRES_IN') ?? '2d';
+      config.get<string>('JWT.REFRESH_TOKEN.EXPIRES_IN') ?? '2d';
   }
 
   async generateAccessToken(user: User): Promise<string> {
