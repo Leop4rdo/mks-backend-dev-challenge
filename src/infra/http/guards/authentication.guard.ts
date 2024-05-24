@@ -22,7 +22,9 @@ export class AuthenticationGuard implements CanActivate {
   }
 
   extractToken(request: Request): string {
-    const [type, token] = request.headers.authorization?.split(' ');
+    if (!request.headers.authorization) throw new UnauthorizedException();
+
+    const [type, token] = request.headers.authorization.split(' ');
 
     if (type !== 'Bearer' || !token) throw new UnauthorizedException();
 

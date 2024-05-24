@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UserRepository } from 'src/application/repositories';
 import { AuthenticationTokenService } from 'src/application/services';
 
 export type RefreshAccessTokenInput = {
@@ -10,11 +11,24 @@ export type RefreshAccessTokenOutput = {
 
 @Injectable()
 export class RefreshAccessTokenUseCase {
-  constructor(private readonly tokenService: AuthenticationTokenService) {}
+  constructor(
+    private readonly tokenService: AuthenticationTokenService,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async execute(
     input: RefreshAccessTokenInput,
   ): Promise<RefreshAccessTokenOutput> {
-    return new Promise(null);
+    const userId = await this.tokenService.decodeRefreshToken(
+      input.refreshToken,
+    );
+
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) throw new UnauthorizedException();
+
+    const accessToken = await this.tokenService.generateAccessToken(user);
+
+    return { accessToken };
   }
 }

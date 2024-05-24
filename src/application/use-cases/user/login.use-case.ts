@@ -6,12 +6,12 @@ import {
   HashService,
 } from 'src/application/services';
 
-export type LoginInput = {
+export type LoginInputDTO = {
   email: string;
   password: string;
 };
 
-export type LoginOutput = {
+export type LoginOutputDTO = {
   acessToken: string;
   refreshToken: string;
 };
@@ -24,7 +24,7 @@ export class LoginUseCase {
     private readonly tokenService: AuthenticationTokenService,
   ) {}
 
-  async execute(input: LoginInput): Promise<LoginOutput> {
+  async execute(input: LoginInputDTO): Promise<LoginOutputDTO> {
     const user = await this.repository.findByEmail(input.email.toLowerCase());
 
     if (!user) throw new InvalidCredentialsError();

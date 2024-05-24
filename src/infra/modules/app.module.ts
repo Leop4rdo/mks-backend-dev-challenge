@@ -3,7 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   CreateUserUseCase,
+  ListUsersUseCase,
   LoginUseCase,
+  RefreshAccessTokenUseCase,
 } from 'src/application/use-cases/user';
 import TypeOrmModuleFactory from '../config/typeorm-module.factory';
 import { UserRepository } from 'src/application/repositories';
@@ -34,6 +36,8 @@ import { AuthenticationGuard } from '../http/guards/authentication.guard';
   providers: [
     CreateUserUseCase,
     LoginUseCase,
+    RefreshAccessTokenUseCase,
+    ListUsersUseCase,
     AuthenticationGuard,
     { provide: UserRepository, useClass: UserTypeOrmRepository },
     { provide: HashService, useClass: BcryptHashService },

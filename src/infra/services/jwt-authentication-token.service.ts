@@ -62,4 +62,13 @@ export class JwtAuthenticationTokenService
       issuer: this.ISSUER,
     });
   }
+
+  async decodeRefreshToken(refreshToken: string): Promise<UUID> {
+    const decoded = await this.jwt.verifyAsync(refreshToken, {
+      secret: this.SECRET,
+      issuer: this.ISSUER,
+    });
+
+    return decoded.id;
+  }
 }
